@@ -19,3 +19,25 @@ new_git_repository(
     commit = "cd1c702d0eba38c0c6130a6094257389427cfd4b"
 )
 
+new_git_repository(
+    name = "hnsw",
+    build_file = "//bazel:hnsw.BUILD",
+    commit = "573ab84a7f7645f98778cbb181ba762c5d2f19b5",
+    remote = "https://github.com/typesense/hnswlib.git",
+)
+
+http_archive(
+    name = "com_github_xianyi_openblas",
+    build_file = "//bazel:openblas.BUILD",
+    sha256 = "5d9491d07168a5d00116cdc068a40022c3455bf9293c7cb86a65b1054d7e5114",
+    strip_prefix = "OpenBLAS-0.3.23",
+    url = "https://github.com/xianyi/OpenBLAS/archive/refs/tags/v0.3.23.tar.gz",
+)
+
+http_archive(
+    name = "com_github_facebookresearch_faiss",
+    build_file = "//bazel:faiss.BUILD",
+    sha256 = "c08779395e30340a88ec4a963cac4e8959545a2a9d7f3b6eac01be701d1018f6",
+    strip_prefix = "faiss-1.7.4",
+    url = "https://github.com/facebookresearch/faiss/archive/v1.7.4.zip",
+)
