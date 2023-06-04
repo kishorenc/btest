@@ -46,8 +46,9 @@ namespace ivfhnsw {
         size_t nc;              ///< Number of centroids
         size_t code_size;       ///< Code size per vector in bytes
 
-        hnswlib::HierarchicalNSW<float> *quantizer; ///< Quantizer that maps vectors to inverted lists (HNSW [Y.Malkov])
-        hnswlib::InnerProductSpace* space;
+        ///< Quantizer that maps vectors to inverted lists
+        hnswlib::HierarchicalNSW<float> *quantizer = nullptr;
+        hnswlib::InnerProductSpace* space = nullptr;
 
         faiss::ProductQuantizer *pq;         ///< Produces the residual codes
         faiss::ProductQuantizer *norm_pq;    ///< Produces the norm codes of reconstructed base vectors
@@ -79,7 +80,7 @@ namespace ivfhnsw {
           * @param M                   min number of edges per point, default: 16
           * @param efConstruction      max number of candidate vertices in queue to observe, default: 500
         */
-        void build_quantizer(const char *path_data, const char *path_info, const char *path_edges,
+        void build_quantizer(size_t n, const float *x,
                              size_t M=16, size_t efConstruction = 500);
 
         /** Return the indices of the k HNSW vertices closest to the query x.

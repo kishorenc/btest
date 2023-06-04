@@ -30,38 +30,27 @@ namespace ivfhnsw {
         if (pq) delete pq;
         if (norm_pq) delete norm_pq;
         if (opq_matrix) delete opq_matrix;
+        if(space) delete space;
     }
 
     /**
      * There has been removed parallel HNSW construction in order to make internal centroid ids equal to external ones.
      * Construction time is still acceptable: ~5 minutes for 1 million 96-d vectors on Intel Xeon E5-2650 V2 2.60GHz.
      */
-    void IndexIVF_HNSW::build_quantizer(const char *path_data, const char *path_info,
-                                        const char *path_edges, size_t M, size_t efConstruction)
+    void IndexIVF_HNSW::build_quantizer(size_t n, const float *x,
+                                        size_t M, size_t efConstruction)
     {
         space = new hnswlib::InnerProductSpace(d);
-
-        if (exists(path_info) && exists(path_edges)) {
-            quantizer = new hnswlib::HierarchicalNSW<float>(space, path_data);
-            quantizer->ef_construction_ = efConstruction;
-            return;
-        }
-
         quantizer = new hnswlib::HierarchicalNSW(space, nc, M, efConstruction);
 
-        std::cout << "Constructing quantizer\n";
-        std::ifstream input(path_data, std::ios::binary);
+        float* centroids = new float[nc * d];
+        faiss::kmeans_clustering(d, n, nc, x, centroids);
 
-        size_t report_every = 100000;
         for (size_t i = 0; i < nc; i++) {
-            float mass[d];
-            readXvec<float>(input, mass, d);
-            if (i % report_every == 0)
-                std::cout << i / (0.01 * nc) << " %\n";
-            quantizer->addPoint(mass, i);
+            quantizer->addPoint(centroids, i);
         }
 
-        quantizer->saveIndex(path_info);
+        delete [] centroids;
     }
 
 

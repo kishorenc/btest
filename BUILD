@@ -32,7 +32,7 @@ cc_binary(
     deps = [
         ":common_deps",
     ],
-    copts = ["-fopenmp"],
+    copts = ["-fopenmp", "-g", "-O2"],
     linkopts = ["-fopenmp"]
 #    linkopts = select({
 #        "@platforms//os:linux": ["-static-libstdc++", "-static-libgcc"],
