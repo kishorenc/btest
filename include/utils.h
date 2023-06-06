@@ -119,8 +119,9 @@ namespace ivfhnsw {
                 exit(1);
             }
             in.read((char *) mass, dim * sizeof(T));
-            for (size_t j = 0; j < d; j++)
+            for (size_t j = 0; j < d; j++) {
                 data[i * dim + j] = 1. * mass[j];
+            }
         }
     }
 

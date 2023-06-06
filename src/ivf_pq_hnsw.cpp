@@ -47,12 +47,13 @@ namespace ivfhnsw {
         faiss::kmeans_clustering(d, n, nc, x, centroids);
 
         for (size_t i = 0; i < nc; i++) {
-            quantizer->addPoint(centroids, i);
+            quantizer->addPoint(centroids + (i * d), i);
         }
 
         delete [] centroids;
-    }
 
+        compute_centroid_norms();
+    }
 
     void IndexIVF_HNSW::assign(size_t n, const float *x, idx_t *labels, size_t k) {
 #pragma omp parallel for
@@ -232,6 +233,7 @@ namespace ivfhnsw {
             memcpy(copy_residuals.data(), residuals.data(), n * d * sizeof(float));
             opq_matrix->apply_noalloc(n, copy_residuals.data(), residuals.data());
         }
+
         // Train residual PQ
         printf("Training %zdx%zd product quantizer on %ld vectors in %dD\n", pq->M, pq->ksub, n, d);
         pq->verbose = true;
