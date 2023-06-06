@@ -27,7 +27,8 @@ cc_library(
 cc_binary(
     name = "sample",
     srcs = [
-        ":src_files"
+        ":src_files",
+        "src/main/main.cpp"
     ],
     deps = [
         ":common_deps",
@@ -40,3 +41,15 @@ cc_binary(
 #    }),
 )
 
+cc_binary(
+    name = "faiss_test",
+    srcs = [
+        ":src_files",
+        "src/main/faiss_test.cpp"
+    ],
+    deps = [
+        ":common_deps",
+    ],
+    copts = ["-fopenmp", "-g", "-O2"],
+    linkopts = ["-fopenmp"]
+)
